@@ -13,8 +13,8 @@ app.add_middleware(
 )
 
 stories = [
-    {"title": "First Story", "content": "This is the first story."},
-    {"title": "Second Story", "content": "This is the second story."}
+    {"emoji": "👀", "title": "First Story", "puzzle": "This is the first story.", "solution": "This is the first solution"},
+    {"emoji": "🔥","title": "Second Story", "puzzle": "This is the second story.", "solution": "This is the second solution" }
 ]
 
 #test function
