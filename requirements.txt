@@ -1,2 +1,5 @@
 fastapi
 uvicorn
+websockets
+dotenv
+openai
