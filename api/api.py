@@ -13,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-stories: List[ Dict[str, str, str, str] ] = [
+stories: List[ Dict[str, str] ] = [
     {"emoji": "👀", "title": "First Story", "puzzle": "This is the first story.", "solution": "This is the first solution"},
     {"emoji": "🔥","title": "Second Story", "puzzle": "This is the second story.", "solution": "This is the second solution" }
 ]
