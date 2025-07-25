@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Coustard:wght@400;900&family=Noto+Emoji:wght@300..700&family=Special+Elite&display=swap');
+
+body{
+  margin: 0;
+  padding: 0;
+
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Special Elite';
+}
+
+h1, h2, h3, h4, h5, h6{
+  font-family: 'Coustard';
+
+  margin: 0;
+  padding: 0;
+}
+
+ul, li{
+  all: unset;
+}
+
+:root{
+  --background-color: #202020;
+  --primary-color: #4B4E4B;
+  --active-color: #FFD700;
+  --text-color: #FFFFFF;
+}
