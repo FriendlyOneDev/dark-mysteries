@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from typing import List, Dict, Optional
 import os
 import uvicorn
 
@@ -12,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-stories = [
+stories: List[ Dict[str, str, str, str] ] = [
     {"emoji": "👀", "title": "First Story", "puzzle": "This is the first story.", "solution": "This is the first solution"},
     {"emoji": "🔥","title": "Second Story", "puzzle": "This is the second story.", "solution": "This is the second solution" }
 ]
