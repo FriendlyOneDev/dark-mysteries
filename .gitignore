@@ -1,3 +1,7 @@
 node_modules
 server/static
-venv
+
+venv/
+.venv/
+.env
+
