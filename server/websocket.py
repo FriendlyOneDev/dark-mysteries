@@ -27,7 +27,7 @@ MYSTERIES = [
 
 
 class GameSession:
-    def init(self, websocket, situation, solution):
+    def __init__(self, websocket, situation, solution):
         self.websocket = websocket
         self.session_id = str(uuid.uuid4())[:8]
         self.situation = situation
@@ -108,7 +108,7 @@ Current game session begins NOW.
                 self.active = False
                 return
 
-response_text = response_text.strip().split(".")[0].strip()
+            response_text = response_text.strip().split(".")[0].strip()
             await self.send_message(
                 json.dumps({"role": "Narrator", "content": response_text})
             )
@@ -173,5 +173,5 @@ def run_server():
         print(f"Server error: {str(e)}")
 
 
-if name == "main":
+if __name__ == "__main__":
     run_server()
