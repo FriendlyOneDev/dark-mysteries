@@ -4,4 +4,4 @@ server/static
 venv/
 .venv/
 .env
-
+__pycache__/

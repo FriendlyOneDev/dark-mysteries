@@ -1,3 +1,4 @@
 websockets
 dotenv
 openai
+uvloop
