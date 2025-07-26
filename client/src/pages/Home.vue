@@ -9,7 +9,7 @@
 </template>
 <script>
   import Header from '../components/Header.vue';
-  import Story from '../components/Story.vue';
+  import Story from '../components/StoryLink.vue';
 
   export default {
     components: { Header, Story },

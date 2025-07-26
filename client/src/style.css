@@ -16,7 +16,7 @@ h1, h2, h3, h4, h5, h6{
   padding: 0;
 }
 
-ul, li{
+a, ul, li{
   all: unset;
 }
 
@@ -27,9 +27,33 @@ ul, li{
   --text-color: #FFFFFF;
 }
 
-.icon{
-  font-size: 64px;
+.icon-small, .icon-big{
   font-family: 'Noto Emoji';
   user-select: none;
   color: red;
+}
+
+.icon-small{
+  font-size: 64px;
+}
+.icon-big{
+  font-size: 128px;
+}
+
+.btn-dashed{
+  background: none;
+  color: var(--text-color);
+  font: inherit;
+  font-size: 24px;
+  padding: 5px;
+  border: 3px var(--text-color) dashed;
+  box-sizing: border-box;
+
+  transition-property: background color border;
+  transition-duration: 250ms;
+}
+.btn-dashed:hover{
+  background-color: var(--active-color);
+  color: var(--background-color);
+  border-color: transparent;
 }

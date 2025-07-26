@@ -1,13 +1,15 @@
 <template>
-  <div class="story">
-    <div class="icon-box">
-      <span class="icon">{{ emoji }}</span>
+  <router-link :to="{ name: 'story', params: { id: id } }">
+    <div class="story">
+      <div class="icon-box">
+        <span class="icon-small">{{ emoji }}</span>
+      </div>
+      <h3 class="title">{{ title }}</h3>
     </div>
-    <h3 class="title">{{ title }}</h3>
-  </div>
+  </router-link>
 </template>
 <script setup>
-  const { title, emoji } = defineProps(['title', 'emoji']);
+  const { title, emoji, id } = defineProps(['title', 'emoji', 'id']);
 </script>
 <style scoped>
   .story{
