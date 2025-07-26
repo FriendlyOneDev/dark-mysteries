@@ -87,27 +87,17 @@ def get_story(id: int):
 async def websocket_endpoint(websocket: WebSocket, story_id: int):
     await websocket.accept()
 
-    # Find the selected story
     story = all_stories.find_story("id", story_id)
     if story is None:
         await websocket.close(code=1008, reason="Story not found")
         return
 
-    # Verify required fields exist
-    if "puzzle" not in story or "solution" not in story:
-        await websocket.send_text("Error: Story data is incomplete")
-        await websocket.close(code=1008, reason="Incomplete story data")
-        return
-
-    # Create a new game session using 'puzzle' instead of 'situation'
     session = GameSession(websocket, story["puzzle"], story["solution"])
     sessions[session.session_id] = session
 
     try:
         await websocket.send_text(f"Situation: {session.situation}")
-        await websocket.send_text(
-            "Ask yes/no questions to solve the mystery. Send 'quit' to exit."
-        )
+        await websocket.send_text("Ask yes/no questions to solve the mystery.")
 
         while session.active:
             data = await websocket.receive_text()
