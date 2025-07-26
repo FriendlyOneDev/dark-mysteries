@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import uuid
+import re
 from fastapi import WebSocket
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -63,6 +64,20 @@ Current game session begins NOW.
             print(f"Session {self.session_id} send error: {str(e)}")
             self.active = False
 
+    @staticmethod
+    def parse_answer(response_text):
+        match = re.search(r"\b(Yes|No|Bad question)\b", response_text, re.IGNORECASE)
+        if match:
+            answer_raw = match.group(1).lower()
+            if answer_raw == "bad question":
+                return "bad"
+            return answer_raw
+        return "bad"
+
+    @staticmethod
+    def parse_solved(response_text):
+        return "CORRECT!" in response_text
+
     async def handle_message(self, user_input):
         if not self.active:
             return
@@ -72,7 +87,7 @@ Current game session begins NOW.
             return
 
         if user_input.lower() == "quit":
-            await self.send_message("Ending session. Goodbye!")
+            await self.send_message(json.dumps({"answer": "quit", "solved": False}))
             self.active = False
             return
 
@@ -88,22 +103,20 @@ Current game session begins NOW.
             response_text = response.choices[0].message.content
             self.messages.append({"role": "assistant", "content": response_text})
 
-            if "CORRECT!" in response_text:
-                await self.send_message("\n" + response_text)
-                await self.send_message("\nCongratulations! You solved the mystery!")
-                await self.send_message(f"The solution was: {self.solution}")
+            answer = self.parse_answer(response_text)
+            solved = self.parse_solved(response_text)
+
+            result = {"answer": answer, "solved": solved}
+
+            await self.send_message(json.dumps(result))
+
+            if solved:
                 print(f"Session {self.session_id} solved correctly!")
                 self.active = False
-                return
-
-            trimmed = response_text.strip().split(".")[0].strip()
-            await self.send_message(
-                json.dumps({"role": "Narrator", "content": trimmed})
-            )
 
         except Exception as e:
             print(f"Session {self.session_id} AI error: {str(e)}")
-            await self.send_message("System error occurred. Please try again.")
+            await self.send_message(json.dumps({"answer": "error", "solved": False}))
             self.active = False
 
 
