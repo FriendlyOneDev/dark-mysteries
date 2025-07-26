@@ -10,7 +10,8 @@
 <style scoped>
   .header{
     display: flex;
-    padding: 20px 30px;
+    padding: 0 30px;
+    padding-top: 20px;
     align-items: center;
   }
   .title{

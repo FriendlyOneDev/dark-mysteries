@@ -32,6 +32,9 @@
   }
 </script>
 <style scoped>
+  .header{
+    margin-bottom: 50px;
+  }
   .wrapper{
     width: 75%;
     margin: auto;
