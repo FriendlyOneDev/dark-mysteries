@@ -56,7 +56,9 @@ def hello():
 
 @app.on_event("startup")
 def startup_event():
+    global all_stories
     print("Loading stories...")
+    all_stories = Stories()
     all_stories.load_stories("server/stories/stories.json")
 
 #return a list of all stories
@@ -81,8 +83,6 @@ def get_new_session(story: Dict[str, str]):
 if __name__ == "__main__":
 
     port = 3000
-
-    print(all_stories.stories)
 
     os.environ["APP_PORT"] = str(port)
 
