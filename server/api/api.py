@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 import os
 import uvicorn
 import json
@@ -14,44 +14,64 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-stories: List[ Dict[str, str] ] = []
 
 
-def load_stories(path: str):
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            stories = json.load(f)
-            if isinstance(stories, list):
-                return stories
-            else:
-                raise ValueError("JSON is not a list")
-    except FileNotFoundError:
-        print(f"File '{path}' not found.")
-    except json.JSONDecodeError as e:
-        print(f"Invalid JSON format: {e}")
-    except Exception as e:
-        print(f"Error loading stories: {e}")
-    return []
+#class to store stories
+class Stories:
+    def __init__(self):
+        self.stories: List[ Dict[str, Any] ] = []
+
+    def load_stories(self, path: str):
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    self.stories = data
+                else:
+                    raise ValueError("JSON is not a list")
+        except FileNotFoundError:
+            print(f"File '{path}' not found.")
+        except json.JSONDecodeError as e:
+            print(f"Invalid JSON format: {e}")
+        except Exception as e:
+            print(f"Error loading stories: {e}")
+        
+    
+    def get_all_stories(self) -> List[Dict[str, Any]]:
+        print(self.stories)
+        return [{"id": story["id"], "title": story["title"], "emoji": story["emoji"]} for story in self.stories]
+
+    def find_story(self, key: str, value: Any) -> Dict[str, Any] | None:
+        for story in self.stories:
+            if story.get(key) == value:
+                return story
+        return None
+
+all_stories = None
 
 #test function
 @app.get("/api/hello")
 def hello():
     return {'message': 'Hi!'}
 
+@app.on_event("startup")
+def startup_event():
+    print("Loading stories...")
+    all_stories.load_stories("server/stories/stories.json")
 
 #return a list of all stories
 @app.get("/api/all_stories")
 def get_story_titles():
-    return [{"id": story["id"], "title": story["title"], "emoji": story["emoji"]} for story in stories]
+    return all_stories.get_all_stories()
 
 
 #return a specific story
 @app.get("/api/story")
-def get_story(title: str):
-    for story in stories:
-        if story["title"] == title:
-            return story
-    raise HTTPException(status_code=404, detail="Story not found")
+def get_story(id: int):
+    story = all_stories.find_story("id", id)
+    if story == None:
+        raise HTTPException(status_code=404, detail="Story not found")
+    return story
 
 #return a new game session
 @app.get("/api/new_session")
@@ -62,9 +82,7 @@ if __name__ == "__main__":
 
     port = 3000
 
-    stories = load_stories('server/stories/stories.json')
-
-    print(stories)
+    print(all_stories.stories)
 
     os.environ["APP_PORT"] = str(port)
 
