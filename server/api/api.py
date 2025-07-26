@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict, Optional
 import os
 import uvicorn
+import json
 
 app = FastAPI()
 
@@ -13,10 +14,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-stories: List[ Dict[str, str] ] = [
-    {"emoji": "👀", "title": "First Story", "puzzle": "This is the first story.", "solution": "This is the first solution"},
-    {"emoji": "🔥","title": "Second Story", "puzzle": "This is the second story.", "solution": "This is the second solution" }
-]
+stories: List[ Dict[str, str] ] = []
+
+
+def load_stories(path: str):
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            stories = json.load(f)
+            if isinstance(stories, list):
+                return stories
+            else:
+                raise ValueError("JSON is not a list")
+    except FileNotFoundError:
+        print(f"File '{path}' not found.")
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON format: {e}")
+    except Exception as e:
+        print(f"Error loading stories: {e}")
+    return []
 
 #test function
 @app.get("/api/hello")
@@ -43,9 +58,13 @@ def get_story(title: str):
 def get_new_session(story: Dict[str, str]):
     return ""
 
-if __name__ == "main":
+if __name__ == "__main__":
 
     port = 3000
+
+    stories = load_stories('server/stories/stories.json')
+
+    print(stories)
 
     os.environ["APP_PORT"] = str(port)
 
