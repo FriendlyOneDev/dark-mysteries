@@ -43,7 +43,7 @@ def get_story(title: str):
 def get_new_session(story: Dict[str, str]):
     return ""
 
-if name == "main":
+if __name__ == "main":
 
     port = 3000
 
