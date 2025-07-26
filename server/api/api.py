@@ -73,8 +73,8 @@ def get_story_titles():
     return all_stories.get_all_stories()
 
 
-# return a specific story
-@app.get("/api/story")
+#return a specific story
+@app.get("/api/story/{id}")
 def get_story(id: int):
     story = all_stories.find_story("id", id)
     if story == None:
