@@ -4,12 +4,110 @@ import os
 import sys
 import json
 import uuid
+from fastapi import WebSocket
 from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
+
+class GameSession:
+    def __init__(self, websocket, situation, solution):
+        self.websocket = websocket
+        self.session_id = str(uuid.uuid4())[:8]
+        self.situation = situation
+        self.solution = solution
+        self.active = True
+
+        self.system_prompt = f"""
+ROLE: You are the narrator for a mystery game.
+RULES:
+1. Players only know this situation: {self.situation}
+2. You know this solution: {self.solution}
+3. Players will ask yes/no questions to guess the solution
+4. You must ONLY respond with:
+   - "Yes" (if the answer is definitively yes)
+   - "No" (if the answer is definitively no)
+   - "Bad question" (if the question is not a yes/no question)
+5. If the player's question demonstrates they've correctly guessed the solution:
+   - Respond with: "CORRECT!"
+6. NEVER reveal the solution unless rule #5 is triggered
+7. NEVER explain your answers
+
+Current game session begins NOW.
+"""
+
+        self.messages = [
+            {"role": "system", "content": self.system_prompt},
+            {
+                "role": "assistant",
+                "content": "Understood. I will follow all rules strictly.",
+            },
+        ]
+
+        print(
+            f"Session {self.session_id} started - Situation: {self.situation[:50]}..."
+        )
+
+    async def send_message(self, content):
+        print(f"Session {self.session_id} sending: {content}")
+        if not self.active:
+            return
+
+        try:
+            if not isinstance(content, str):
+                raise TypeError(f"send_message expected str, got {type(content)}")
+            await self.websocket.send_text(content)
+        except Exception as e:
+            print(f"Session {self.session_id} send error: {str(e)}")
+            self.active = False
+
+    async def handle_message(self, user_input):
+        if not self.active:
+            return
+
+        user_input = user_input.strip()
+        if not user_input:
+            return
+
+        if user_input.lower() == "quit":
+            await self.send_message("Ending session. Goodbye!")
+            self.active = False
+            return
+
+        print(f"Session {self.session_id} received: {user_input}")
+        self.messages.append({"role": "user", "content": user_input})
+
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4.1-mini",
+                messages=self.messages,
+                temperature=0.1,
+            )
+            response_text = response.choices[0].message.content
+            self.messages.append({"role": "assistant", "content": response_text})
+
+            if "CORRECT!" in response_text:
+                await self.send_message("\n" + response_text)
+                await self.send_message("\nCongratulations! You solved the mystery!")
+                await self.send_message(f"The solution was: {self.solution}")
+                print(f"Session {self.session_id} solved correctly!")
+                self.active = False
+                return
+
+            trimmed = response_text.strip().split(".")[0].strip()
+            await self.send_message(
+                json.dumps({"role": "Narrator", "content": trimmed})
+            )
+
+        except Exception as e:
+            print(f"Session {self.session_id} AI error: {str(e)}")
+            await self.send_message("System error occurred. Please try again.")
+            self.active = False
+
+
+# For testing purposes
 MYSTERIES = [
     {
         "id": 0,
@@ -63,99 +161,7 @@ MYSTERIES = [
 ]
 
 
-class GameSession:
-    def __init__(self, websocket, situation, solution):
-        self.websocket = websocket
-        self.session_id = str(uuid.uuid4())[:8]
-        self.situation = situation
-        self.solution = solution
-        self.active = True
-
-        self.system_prompt = f"""
-ROLE: You are the narrator for a mystery game.
-RULES:
-1. Players only know this situation: {self.situation}
-2. You know this solution: {self.solution}
-3. Players will ask yes/no questions to guess the solution
-4. You must ONLY respond with:
-   - "Yes" (if the answer is definitively yes)
-   - "No" (if the answer is definitively no)
-   - "Bad question" (if the question is not a yes/no question)
-5. If the player's question demonstrates they've correctly guessed the solution:
-   - Respond with: "CORRECT!"
-6. NEVER reveal the solution unless rule #5 is triggered
-7. NEVER explain your answers
-
-Current game session begins NOW.
-"""
-
-        self.messages = [
-            {"role": "system", "content": self.system_prompt},
-            {
-                "role": "assistant",
-                "content": "Understood. I will follow all rules strictly.",
-            },
-        ]
-
-        print(
-            f"Session {self.session_id} started - Situation: {self.situation[:50]}..."
-        )
-
-    async def send_message(self, content):
-        if not self.active:
-            return
-
-        try:
-            await self.websocket.send(content)
-        except Exception as e:
-            print(f"Session {self.session_id} send error: {str(e)}")
-            self.active = False
-
-    async def handle_message(self, user_input):
-        if not self.active:
-            return
-
-        user_input = user_input.strip()
-        if not user_input:
-            return
-
-        if user_input.lower() == "quit":
-            await self.send_message("Ending session. Goodbye!")
-            self.active = False
-            return
-
-        print(f"Session {self.session_id} received: {user_input}")
-        self.messages.append({"role": "user", "content": user_input})
-
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4.1-mini",
-                messages=self.messages,
-                temperature=0.1,
-            )
-
-            response_text = response.choices[0].message.content
-            self.messages.append({"role": "assistant", "content": response_text})
-
-            if "CORRECT!" in response_text:
-                await self.send_message("\n" + response_text)
-                await self.send_message("\nCongratulations! You solved the mystery!")
-                await self.send_message(f"The solution was: {self.solution}")
-                print(f"Session {self.session_id} solved correctly!")
-                self.active = False
-                return
-
-            response_text = response_text.strip().split(".")[0].strip()
-            await self.send_message(
-                json.dumps({"role": "Narrator", "content": response_text})
-            )
-
-        except Exception as e:
-            print(f"Session {self.session_id} AI error: {str(e)}")
-            await self.send_message("System error occurred. Please try again.")
-            self.active = False
-
-
+# For testing purposes
 async def handle_client(websocket):  # Currently selects random
     import random
 
@@ -183,7 +189,7 @@ async def handle_client(websocket):  # Currently selects random
         print(f"Session {session.session_id} ended")
 
 
-# test server
+# For testing purposes
 async def start_server():
     async with websockets.serve(
         handle_client,
@@ -198,6 +204,7 @@ async def start_server():
         await asyncio.Future()
 
 
+# For testing purposes
 def run_server():
     try:
         import uvloop
@@ -210,5 +217,6 @@ def run_server():
         print(f"Server error: {str(e)}")
 
 
+# For testing purposes
 if __name__ == "__main__":
     run_server()

@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict, Optional, Any
 import os
 import uvicorn
 import json
+from websocket import GameSession
 
 app = FastAPI()
 
@@ -15,15 +16,14 @@ app.add_middleware(
 )
 
 
-
-#class to store stories
+# class to store stories
 class Stories:
     def __init__(self):
-        self.stories: List[ Dict[str, Any] ] = []
+        self.stories: List[Dict[str, Any]] = []
 
     def load_stories(self, path: str):
         try:
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 if isinstance(data, list):
                     self.stories = data
@@ -35,11 +35,13 @@ class Stories:
             print(f"Invalid JSON format: {e}")
         except Exception as e:
             print(f"Error loading stories: {e}")
-        
-    
+
     def get_all_stories(self) -> List[Dict[str, Any]]:
         print(self.stories)
-        return [{"id": story["id"], "title": story["title"], "emoji": story["emoji"]} for story in self.stories]
+        return [
+            {"id": story["id"], "title": story["title"], "emoji": story["emoji"]}
+            for story in self.stories
+        ]
 
     def find_story(self, key: str, value: Any) -> Dict[str, Any] | None:
         for story in self.stories:
@@ -47,27 +49,31 @@ class Stories:
                 return story
         return None
 
-all_stories = None
 
-#test function
-@app.get("/api/hello")
-def hello():
-    return {'message': 'Hi!'}
+all_stories = Stories()
+
+sessions: Dict[str, GameSession] = {}
+
 
 @app.on_event("startup")
 def startup_event():
-    global all_stories
     print("Loading stories...")
-    all_stories = Stories()
     all_stories.load_stories("server/stories/stories.json")
 
-#return a list of all stories
+
+# test function
+@app.get("/api/hello")
+def hello():
+    return {"message": "Hi!"}
+
+
+# return a list of all stories
 @app.get("/api/all_stories")
 def get_story_titles():
     return all_stories.get_all_stories()
 
 
-#return a specific story
+# return a specific story
 @app.get("/api/story")
 def get_story(id: int):
     story = all_stories.find_story("id", id)
@@ -75,15 +81,49 @@ def get_story(id: int):
         raise HTTPException(status_code=404, detail="Story not found")
     return story
 
-#return a new game session
-@app.get("/api/new_session")
-def get_new_session(story: Dict[str, str]):
-    return ""
+
+# return a new game session
+@app.websocket("/ws/{story_id}")
+async def websocket_endpoint(websocket: WebSocket, story_id: int):
+    await websocket.accept()
+
+    # Find the selected story
+    story = all_stories.find_story("id", story_id)
+    if story is None:
+        await websocket.close(code=1008, reason="Story not found")
+        return
+
+    # Verify required fields exist
+    if "puzzle" not in story or "solution" not in story:
+        await websocket.send_text("Error: Story data is incomplete")
+        await websocket.close(code=1008, reason="Incomplete story data")
+        return
+
+    # Create a new game session using 'puzzle' instead of 'situation'
+    session = GameSession(websocket, story["puzzle"], story["solution"])
+    sessions[session.session_id] = session
+
+    try:
+        await websocket.send_text(f"Situation: {session.situation}")
+        await websocket.send_text(
+            "Ask yes/no questions to solve the mystery. Send 'quit' to exit."
+        )
+
+        while session.active:
+            data = await websocket.receive_text()
+            await session.handle_message(data)
+
+    except WebSocketDisconnect:
+        print(f"Client disconnected from session {session.session_id}")
+    except Exception as e:
+        print(f"Error in WebSocket: {str(e)}")
+    finally:
+        if session.session_id in sessions:
+            del sessions[session.session_id]
+        await websocket.close()
+
 
 if __name__ == "__main__":
-
     port = 3000
-
     os.environ["APP_PORT"] = str(port)
-
     uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False)
