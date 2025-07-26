@@ -26,3 +26,10 @@ ul, li{
   --active-color: #FFD700;
   --text-color: #FFFFFF;
 }
+
+.icon{
+  font-size: 64px;
+  font-family: 'Noto Emoji';
+  user-select: none;
+  color: red;
+}

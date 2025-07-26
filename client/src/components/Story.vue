@@ -33,12 +33,6 @@
 
     flex: 1;
   }
-  .icon{
-    font-size: 64px;
-    font-family: 'Noto Emoji';
-    user-select: none;
-    color: red;
-  }
   .title{
     text-align: center;
   }
