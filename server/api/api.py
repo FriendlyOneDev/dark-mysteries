@@ -42,7 +42,7 @@ def hello():
 #return a list of all stories
 @app.get("/api/all_stories")
 def get_story_titles():
-    return [{"title": story["title"], "emoji": story["emoji"]} for story in stories]
+    return [{"id": story["id"], "title": story["title"], "emoji": story["emoji"]} for story in stories]
 
 
 #return a specific story
