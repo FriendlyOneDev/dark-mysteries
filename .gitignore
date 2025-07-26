@@ -5,3 +5,4 @@ api/__pycache__
 venv/
 .venv/
 __pycache__
+.env

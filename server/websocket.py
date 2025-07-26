@@ -12,16 +12,53 @@ client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 MYSTERIES = [
     {
-        "situation": "Sarah held a blade to Cillian's throat. Soon after Cillian gave all the money he had to Sarah.",
-        "solution": "Sarah was Cillian's barber. She shaved his face and cut his hair. He knew how much it would cost so he brought just the exact amount of money needed to pay Sarah.",
+        "id": 0,
+        "emoji": "💔",
+        "title": "Tragic Duo",
+        "situation": "Jack and Judy were lying on the floor dead. There was a puddle of water and broken glass on the floor. How did they die?",
+        "solution": "Jack and Judy were goldfish. They died because their bowl broke.",
     },
     {
-        "situation": "A man walks into a bar and asks for a glass of water. The bartender pulls out a gun. The man says 'Thank you' and leaves.",
-        "solution": "The man had hiccups. The bartender scared them away by pulling out the gun.",
+        "id": 1,
+        "emoji": "❄️",
+        "title": "A Cold Drink",
+        "situation": "Two men walk into a restaurant. The waiter brings them both beverages. The beverages are the same. One man drinks his glass down right away, and nothing bad happens to him. The other man takes his time and drinks slowly. He dies. Why?",
+        "solution": "There was poison in ice cubes. The first man drank it down before the ice had a chance to melt.",
     },
     {
-        "situation": "A woman lives on the 20th floor. Every morning she takes the elevator down to the ground floor. When she returns, she can only take the elevator to the 15th floor and walks the rest of the way unless it's raining.",
-        "solution": "The woman is too short to reach the button for the 20th floor. When it's raining, she uses her umbrella to press the button.",
+        "id": 2,
+        "emoji": "🔫",
+        "title": "The Polite Gunman",
+        "situation": "A man walks into a restaurant and orders a glass of water. The waiter pulls a gun out and points it at the man. The man thanks the waiter and walks out of the restaurant.",
+        "solution": "The man had the hiccups, and waiter saw it and scared them out of him.",
+    },
+    {
+        "id": 3,
+        "emoji": "🏙️",
+        "title": "The Rainy Day",
+        "situation": "Mr. Smith lives on the 30th floor of his apartment building. Every day he takes the elevator down from his apartment to the lobby. After work, he takes the elevator from the lobby to the 15th floor and walks up the stairs the rest of the way. On rainy days he takes the elevator all the way from the lobby to the 30th floor. Why?",
+        "solution": " Mr. Smith is a short. He can`t usually reach the button to the 30th floor. On rainy days he has his umbrella with him and pushes the button with it.",
+    },
+    {
+        "id": 4,
+        "emoji": "🎩",
+        "title": "A Shouting Man`s Despair",
+        "situation": "A car stops in front of a hotel. A man turns to his wife and shouts 'I`m ruined!' Why?",
+        "solution": "The man and his wife were playing monopoly, and the man`s piece landed on a property with a hotel on it.",
+    },
+    {
+        "id": 5,
+        "emoji": "🏔️",
+        "title": "27 Silent Souls",
+        "situation": "There are 27 people in a cabin on a mountain. The windows and doors are all locked, but everyone inside is dead. What happened?",
+        "solution": "The cabin is an airplane cabin that crashed on a mountain.",
+    },
+    {
+        "id": 6,
+        "emoji": "🕊️",
+        "title": "The Deadly Sighting",
+        "situation": "An avid birdwatcher sees an unexpected bird. Soon he`s dead. What happened?",
+        "solution": "The birdwatcher was flying in a plane. The bird got stuck in the plane`s engine and made the plane crash.",
     },
 ]
 
