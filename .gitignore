@@ -2,3 +2,6 @@ node_modules
 server/static
 venv
 api/__pycache__
+venv/
+.venv/
+__pycache__
