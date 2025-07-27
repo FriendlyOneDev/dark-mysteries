@@ -1,5 +1,5 @@
 node_modules
-server/static
+
 venv
 server/api/__pycache__
 __pycache__/
