@@ -111,6 +111,7 @@ def get_story_titles():
         last_modified_time = current_modified
     return all_stories.get_all_stories()
 
+
 # return a specific story
 @app.get("/api/story/{id}")
 def get_story(id: int):
@@ -169,6 +170,6 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
 
 
 if __name__ == "__main__":
-    port = 3000
+    port = int(os.environ.get("PORT", 3000))
     os.environ["APP_PORT"] = str(port)
     uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False)
