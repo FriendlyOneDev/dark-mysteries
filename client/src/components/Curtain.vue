@@ -1,9 +1,12 @@
 <template>
-  <div v-if="status == 'error'">Something went wrong</div>
-  <template v-else-if="status == 'done'">
-    <slot></slot>
+  <div v-if="!done">Loading...</div>
+  <template v-else>
+    <div v-if="error">
+      Something went wrong..
+    </div>
+    <slot v-else></slot>
   </template>
 </template>
 <script setup>
-  const { status } = defineProps(['status']);
+  const { done, error } = defineProps(['done', 'error']);
 </script>

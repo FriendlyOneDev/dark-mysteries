@@ -1,14 +1,12 @@
 <template>
-  <Curtain :status="status">
+  <Curtain v-bind="status">
     <div class="wrapper">
       <Card 
-        :puzzle="data.puzzle"
-        :emoji="data.emoji"
-        :title="data.title"
+        :puzzle="data.puzzle" :emoji="data.emoji" :title="data.title"
       >
         <div class="footer">
           <button class="btn-dashed">revel solution</button>
-          <router-link :to="{ name: 'chat', params: { id: route.params.id } }" class="btn-dashed">
+          <router-link :to="{ name: 'chat', params: { id: $route.params.id } }" class="btn-dashed">
             play with AI
           </router-link>
         </div>
@@ -37,15 +35,11 @@
   }
 </style>
 <script setup>
-  import { useRoute } from 'vue-router';
+  import { useFetcher } from '../loader.js';
 
   import Card from '../components/Card.vue';
   import Curtain from '../components/Curtain.vue';
-  import useLoader from '../loader.js';
+  import { watch } from 'vue';
 
-  const route = useRoute();
-
-  const { status, data } = useLoader(() => route.params.id, async (id) => {
-    return (await fetch(`/api/story/${id}`)).json();
-  });
+  const { status, data } = useFetcher((route) => fetch(`/api/story/${route.params.id}`));
 </script>

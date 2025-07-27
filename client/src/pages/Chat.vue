@@ -1,5 +1,5 @@
 <template>
-  <Curtain :status="status">
+  <Curtain v-bind="status">
     <div class="wrapper">
       <MessageHistory :messages="history"/>
       <MessageInput @message="message"/>
@@ -26,58 +26,32 @@
   }
 </style>
 <script setup>
-  import { reactive, ref } from 'vue';
-  import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
+  import { reactive, ref, watch } from 'vue';
+  import { useSocket } from '../loader.js';
   
   import Curtain from '../components/Curtain.vue';
   import MessageHistory from '../components/MessageHistory.vue';
   import MessageInput from '../components/MessageInput.vue';
 
-  const status = ref('loading');
   const ignore = ref(true);
   const history = reactive([]);
 
-  let websocket = connect(useRoute().params.id);
+  const { status, socket } = useSocket((route) => new WebSocket(`/ws/${route.params.id}`));
 
-  function connect(id){
-    let socket = new WebSocket(`/ws/${id}`);
-    status.value = 'loading';
-  
-    socket.addEventListener('open', () => {
-      status.value = 'done';
-    });
-    socket.addEventListener('error', () => {
-      status.value = 'error';
-    });
-    socket.addEventListener('close', (event) => {
-      status.value = 'error';
-    });
-    
-    socket.addEventListener('message', (event) => {
-      if(!ignore.value){
-        history.push({ text: JSON.parse(event.data).answer, type: false });
-      }
-    });
+  watch(status, (websocket) => {
+    if(!status.value.done) return;
 
-    return socket;
-  }
+    socket.value.addEventListener('message', (event) => {
+      if(ignore.value) return;
+
+      history.push({ text: JSON.parse(event.data).answer, type: false });
+    })
+  })
 
   function message(text){
     ignore.value = false;
     history.push({ text, type: true });
 
-    websocket.send(text);
+    socket.value.send(text);
   }
-
-  onBeforeRouteUpdate((to) => {
-    websocket.close();
-
-    ignore.value = true;
-    history.length = 0;
-
-    websocket = connect(to.params.id);
-  });
-  onBeforeRouteLeave(() => {
-    websocket.close();
-  });
 </script>
