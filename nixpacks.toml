@@ -1,6 +1,5 @@
 [providers]
-node = true
-python = true
+providers = ["node", "python"] 
 
 [phases.install]
 cmds = [
