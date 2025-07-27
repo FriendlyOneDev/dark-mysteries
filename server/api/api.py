@@ -1,11 +1,13 @@
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict, Optional, Any
+from pydantic import BaseModel
 import os
 import uvicorn
 import json
 from websocket import GameSession
 from auth import AuthService
+from user_stories_utils import UserStories
 
 app = FastAPI()
 
@@ -15,6 +17,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# User submission stuff
+user_stories = UserStories()
+
 
 # Auth stuff
 auth_service = AuthService()
@@ -85,6 +91,23 @@ def get_story(id: int):
     if story == None:
         raise HTTPException(status_code=404, detail="Story not found")
     return story
+
+
+# Story submission model
+class StorySubmission(BaseModel):
+    emoji: str
+    title: str
+    puzzle: str
+    solution: str
+    author: str
+
+
+# sunmit a new story
+@app.post("/api/submit_story")
+def submit_story(submission: StorySubmission):
+    story = submission.dict()
+    result = user_stories.submit_story(story)
+    return result
 
 
 # return a new game session

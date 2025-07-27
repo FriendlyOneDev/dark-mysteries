@@ -76,7 +76,8 @@ class UserStories:
             json.dump(approved, sf, indent=2, ensure_ascii=False)
 
         print(f"Story with id {new_id} approved and saved.")
-        return {"message": f"Story approved with id {new_id}", "story": story}
+        print(f"Story: {story}")
+        print(f"Pending stories remaining: {len(pending)}")
 
     def list_pending(self):
         with open(self.pending_stories_file, "r", encoding="utf-8") as f:
@@ -86,16 +87,21 @@ class UserStories:
                 return []
 
             for i, story in enumerate(pending):
+                print("-" * 40)
                 print(
                     f"[{i}] {story.get('emoji', '')} {story.get('title', '')} by {story.get('author', 'Unknown')}"
                 )
+                print(f"Puzzle: {story.get('puzzle')}")
+                print(f"Solution: {story.get('solution')}")
 
-            return pending
+            print("-" * 40)
 
 
 if __name__ == "__main__":
+
     user_stories = UserStories()
 
+    """
     # Submit
     user_stories.submit_story(
         {
@@ -131,3 +137,12 @@ if __name__ == "__main__":
 
     # Approve the second story in the pending list
     print(user_stories.approve_story(1))
+    """
+
+    # Remote approval of stories
+    user_stories.list_pending()
+    index = int(input("Approve which pending story? "))
+    try:
+        user_stories.approve_story(index)
+    except IndexError as e:
+        print(f"Error: {e}")
