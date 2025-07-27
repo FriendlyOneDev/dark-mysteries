@@ -1,9 +1,58 @@
 [
-    {"id": 0 , "emoji": "💔", "title": "Tragic Duo", "puzzle": "Jack and Judy were lying on the floor dead. There was a puddle of water and broken glass on the floor. How did they die?", "solution": "Jack and Judy were goldfish. They died because their bowl broke."},
-    {"id": 1 , "emoji": "❄️", "title": "A Cold Drink", "puzzle": "Two men walk into a restaurant. The waiter brings them both beverages. The beverages are the same. One man drinks his glass down right away, and nothing bad happens to him. The other man takes his time and drinks slowly. He dies. Why?", "solution": "There was poison in ice cubes. The first man drank it down before the ice had a chance to melt."},
-    {"id": 2 , "emoji": "🔫", "title": "The Polite Gunman", "puzzle": "A man walks into a restaurant and orders a glass of water. The waiter pulls a gun out and points it at the man. The man thanks the waiter and walks out of the restaurant.", "solution": "The man had the hiccups, and waiter saw it and scared them out of him."},
-    {"id": 3 , "emoji": "🏙️", "title": "The Rainy Day", "puzzle": "Mr. Smith lives on the 30th floor of his apartment building. Every day he takes the elevator down from his apartment to the lobby. After work, he takes the elevator from the lobby to the 15th floor and walks up the stairs the rest of the way. On rainy days he takes the elevator all the way from the lobby to the 30th floor. Why?", "solution": " Mr. Smith is a short. He can`t usually reach the button to the 30th floor. On rainy days he has his umbrella with him and pushes the button with it."},
-    {"id": 4 , "emoji": "🎩", "title": "A Shouting Man`s Despair", "puzzle": "A car stops in front of a hotel. A man turns to his wife and shouts 'I`m ruined!' Why?", "solution": "The man and his wife were playing monopoly, and the man`s piece landed on a property with a hotel on it."},
-    {"id": 5 , "emoji": "🏔️", "title": "27 Silent Souls", "puzzle": "There are 27 people in a cabin on a mountain. The windows and doors are all locked, but everyone inside is dead. What happened?", "solution": "The cabin is an airplane cabin that crashed on a mountain."},
-    {"id": 6 , "emoji": "🕊️", "title": "The Deadly Sighting", "puzzle": "An avid birdwatcher sees an unexpected bird. Soon he`s dead. What happened?", "solution": "The birdwatcher was flying in a plane. The bird got stuck in the plane`s engine and made the plane crash."}
+  {
+    "id": 0,
+    "emoji": "💔",
+    "title": "Tragic Duo",
+    "puzzle": "Jack and Judy were lying on the floor dead. There was a puddle of water and broken glass on the floor. How did they die?",
+    "solution": "Jack and Judy were goldfish. They died because their bowl broke.",
+    "author": null
+  },
+  {
+    "id": 1,
+    "emoji": "❄️",
+    "title": "A Cold Drink",
+    "puzzle": "Two men walk into a restaurant. The waiter brings them both beverages. The beverages are the same. One man drinks his glass down right away, and nothing bad happens to him. The other man takes his time and drinks slowly. He dies. Why?",
+    "solution": "There was poison in ice cubes. The first man drank it down before the ice had a chance to melt.",
+    "author": null
+  },
+  {
+    "id": 2,
+    "emoji": "🔫",
+    "title": "The Polite Gunman",
+    "puzzle": "A man walks into a restaurant and orders a glass of water. The waiter pulls a gun out and points it at the man. The man thanks the waiter and walks out of the restaurant.",
+    "solution": "The man had the hiccups, and waiter saw it and scared them out of him.",
+    "author": null
+  },
+  {
+    "id": 3,
+    "emoji": "🏙️",
+    "title": "The Rainy Day",
+    "puzzle": "Mr. Smith lives on the 30th floor of his apartment building. Every day he takes the elevator down from his apartment to the lobby. After work, he takes the elevator from the lobby to the 15th floor and walks up the stairs the rest of the way. On rainy days he takes the elevator all the way from the lobby to the 30th floor. Why?",
+    "solution": " Mr. Smith is a short. He can`t usually reach the button to the 30th floor. On rainy days he has his umbrella with him and pushes the button with it.",
+    "author": null
+  },
+  {
+    "id": 4,
+    "emoji": "🎩",
+    "title": "A Shouting Man`s Despair",
+    "puzzle": "A car stops in front of a hotel. A man turns to his wife and shouts 'I`m ruined!' Why?",
+    "solution": "The man and his wife were playing monopoly, and the man`s piece landed on a property with a hotel on it.",
+    "author": null
+  },
+  {
+    "id": 5,
+    "emoji": "🏔️",
+    "title": "27 Silent Souls",
+    "puzzle": "There are 27 people in a cabin on a mountain. The windows and doors are all locked, but everyone inside is dead. What happened?",
+    "solution": "The cabin is an airplane cabin that crashed on a mountain.",
+    "author": null
+  },
+  {
+    "id": 6,
+    "emoji": "🕊️",
+    "title": "The Deadly Sighting",
+    "puzzle": "An avid birdwatcher sees an unexpected bird. Soon he`s dead. What happened?",
+    "solution": "The birdwatcher was flying in a plane. The bird got stuck in the plane`s engine and made the plane crash.",
+    "author": null
+  }
 ]
