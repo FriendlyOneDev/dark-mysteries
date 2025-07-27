@@ -3,3 +3,7 @@ uvicorn
 dotenv
 websockets
 openai
+pytest
+passlib
+python-multipart
+pytest-asyncio

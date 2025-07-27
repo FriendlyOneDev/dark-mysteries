@@ -5,6 +5,7 @@ import os
 import uvicorn
 import json
 from websocket import GameSession
+from auth import AuthService
 
 app = FastAPI()
 

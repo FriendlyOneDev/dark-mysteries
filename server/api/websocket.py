@@ -69,7 +69,7 @@ Current game session begins NOW.
         match = re.search(r"\b(Yes|No|Bad question)\b", response_text, re.IGNORECASE)
         if match:
             answer_raw = match.group(1).lower()
-            if answer_raw == "bad question":
+            if "bad" in answer_raw:
                 return "bad"
             return answer_raw
         return "bad"
