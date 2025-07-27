@@ -1,32 +1,32 @@
 <template>
   <Curtain :status="status">
     <div class="wrapper">
-      <Flip :isFlipped="isFlipped">
-       <slot name="front" v-if="!isFlipped">
+      <Flip :flipped="isFlipped">
+        <template v-slot:front>
           <Card 
-          :puzzle="data.puzzle"
-          :emoji="data.emoji"
-          :title="data.title"
-        >
-          <div class="footer">
-            <button class="btn-dashed" @click="flipCard">reveal solution</button>
-            <router-link :to="{ name: 'chat', params: { id: route.params.id } }" class="btn-dashed">
-              play with AI
-            </router-link>
-          </div>
-        </Card>
-        </slot>
-        <slot name="back" v-else>
-                    <Card 
+            :puzzle="data.puzzle"
+            :emoji="data.emoji"
+            :title="data.title"
+          >
+            <div class="footer">
+              <button class="btn-dashed" @click="flipCard">reveal solution</button>
+              <router-link :to="{ name: 'chat', params: { id: route.params.id } }" class="btn-dashed">
+                play with AI
+              </router-link>
+            </div>
+          </Card>
+        </template>
+        <template v-slot:back>
+          <Card
             :puzzle="data.solution"
             :emoji="data.emoji"
-            :title="Solution"
+            :title="data.title"
           >
             <div class="footer">
               <button class="btn-dashed" @click="flipCard">go back</button>
             </div>
           </Card>
-        </slot>
+        </template>
       </Flip>
     </div>
   </Curtain>

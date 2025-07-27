@@ -1,18 +1,21 @@
 <template>
   <div class="flip-container">
-    <div class="flip-card" :class="{ 'flipped': isFlipped }">
-      <slot></slot>
+    <div class="flip-card" :class="{ 'flipped': flipped }">
+      <slot v-if="!flipped" name="front"></slot>
+      <div v-else class="back-side">
+        <slot name="back"></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
-  isFlipped: {
-    type: Boolean,
-    default: false
-  }
-})
+  defineProps({
+    flipped: {
+      type: Boolean,
+      default: false
+    }
+  })
 </script>
 
 <style scoped>
@@ -52,5 +55,9 @@ defineProps({
 
 .flip-card.flipped:hover {
   transform: rotateY(180deg) translateY(-2px);
+}
+
+.back-side{
+  transform: rotateY(180deg);
 }
 </style>
