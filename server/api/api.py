@@ -111,6 +111,7 @@ def get_story_titles():
         last_modified_time = current_modified
     return all_stories.get_all_stories()
 
+
 # return a specific story
 @app.get("/api/story/{id}")
 def get_story(id: int):
@@ -151,9 +152,6 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
     sessions[session.session_id] = session
 
     try:
-        await websocket.send_text(f"Situation: {session.situation}")
-        await websocket.send_text("Ask yes/no questions to solve the mystery.")
-
         while session.active:
             data = await websocket.receive_text()
             await session.handle_message(data)
