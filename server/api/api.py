@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel
 import os
@@ -10,6 +12,15 @@ from auth import AuthService
 from user_stories_utils import UserStories
 
 app = FastAPI()
+
+static_path = os.path.join(os.path.dirname(__file__), "../static")
+app.mount("/static", StaticFiles(directory=static_path), name="static")
+app.mount(
+    "/assets",
+    StaticFiles(directory=os.path.join(os.path.dirname(__file__), "../static/assets")),
+    name="assets",
+)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,14 +47,12 @@ class Stories:
         try:
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                if isinstance(data, list):
-                    self.stories = data
-                else:
+                if not isinstance(data, list):
                     raise ValueError("JSON is not a list")
-        except FileNotFoundError:
-            print(f"File '{path}' not found.")
-        except json.JSONDecodeError as e:
-            print(f"Invalid JSON format: {e}")
+                if not data:
+                    print("Warning: stories.json is empty!")
+                self.stories = data
+                print(f"Successfully loaded {len(data)} stories")
         except Exception as e:
             print(f"Error loading stories: {e}")
 
@@ -66,10 +75,20 @@ all_stories = Stories()
 sessions: Dict[str, GameSession] = {}
 
 
+@app.get("/")
+async def root():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "../static/index.html"))
+
+
 @app.on_event("startup")
 def startup_event():
-    print("Loading stories...")
-    all_stories.load_stories("server/stories/stories.json")
+    try:
+        print("Loading stories...")
+        all_stories.load_stories("server/stories/stories.json")
+        if not all_stories.stories:
+            print("Warning: No stories loaded!")
+    except Exception as e:
+        print(f"Failed to load stories: {e}")
 
 
 # test function
