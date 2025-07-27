@@ -3,7 +3,7 @@ providers = ["node", "python"]
 
 [phases.install]
 cmds = [
-    "cd client && npm install",
+    "cd client && npm ci",  # Using 'npm ci' for cleaner installs
     "pip install -r requirements.txt"
 ]
 
@@ -14,3 +14,7 @@ cmds = [
 
 [start]
 cmd = "python3 server/api/api.py"
+
+[vars]
+# Add Node.js build environment if needed
+NODE_ENV = "production"
