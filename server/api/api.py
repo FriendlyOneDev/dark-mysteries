@@ -16,6 +16,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Auth stuff
+auth_service = AuthService()
+app.include_router(auth_service.get_router())
+
 
 # class to store stories
 class Stories:

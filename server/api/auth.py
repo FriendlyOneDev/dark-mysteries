@@ -1,3 +1,5 @@
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 import json
 import os
 
@@ -40,6 +42,29 @@ class AuthService:
         if users[username] != password:
             return {"success": False, "reason": "Incorrect password"}
         return {"success": True, "username": username}
+
+    def get_router(self, prefix="/api"):
+        router = APIRouter(prefix=prefix)
+
+        class AuthRequest(BaseModel):
+            username: str
+            password: str
+
+        @router.post("/register")
+        def register(req: AuthRequest):
+            result = self.create_user(req.username, req.password)
+            if not result["success"]:
+                raise HTTPException(status_code=400, detail=result["reason"])
+            return result
+
+        @router.post("/login")
+        def login(req: AuthRequest):
+            result = self.authenticate_user(req.username, req.password)
+            if not result["success"]:
+                raise HTTPException(status_code=401, detail=result["reason"])
+            return result
+
+        return router
 
 
 if __name__ == "__main__":
