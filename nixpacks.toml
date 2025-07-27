@@ -1,0 +1,17 @@
+[providers]
+node = true
+python = true
+
+[phases.install]
+cmds = [
+    "cd client && npm install",
+    "pip install -r requirements.txt"
+]
+
+[phases.build]
+cmds = [
+    "cd client && npm run build"
+]
+
+[start]
+cmd = "python3 server/api/api.py"
