@@ -83,6 +83,8 @@ Current game session begins NOW.
             return
 
         user_input = user_input.strip()
+        if not user_input.endswith("?"):
+            user_input += "?"
         if not user_input:
             return
 
@@ -113,6 +115,8 @@ Current game session begins NOW.
             await self.send_message(json.dumps({"answer": "error", "solved": False}))
             self.active = False
 
+
+#### Everything below this line is for testing purposes
 
 # For testing purposes
 MYSTERIES = [
