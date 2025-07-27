@@ -13,6 +13,10 @@ from user_stories_utils import UserStories
 
 app = FastAPI()
 
+last_modified_time = None
+
+stories_path = "server/stories/stories.json"
+
 static_path = os.path.join(os.path.dirname(__file__), "../static")
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 app.mount(
@@ -100,8 +104,12 @@ def hello():
 # return a list of all stories
 @app.get("/api/all_stories")
 def get_story_titles():
+    global last_modified_time
+    current_modified = os.path.getmtime(stories_path)
+    if last_modified_time is None or current_modified != last_modified_time:
+        all_stories.load_stories(stories_path)
+        last_modified_time = current_modified
     return all_stories.get_all_stories()
-
 
 # return a specific story
 @app.get("/api/story/{id}")
