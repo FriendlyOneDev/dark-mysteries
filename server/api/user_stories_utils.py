@@ -114,6 +114,7 @@ class UserStories:
                 print(f"Solution: {story.get('solution')}")
 
             print("-" * 40)
+        return pending
 
 
 if __name__ == "__main__":
