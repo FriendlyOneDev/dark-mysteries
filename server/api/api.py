@@ -167,6 +167,6 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
 
 
 if __name__ == "__main__":
-    port = 3000
+    port = int(os.environ.get("PORT", 3000))
     os.environ["APP_PORT"] = str(port)
     uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False)
