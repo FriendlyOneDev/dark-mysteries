@@ -38,8 +38,8 @@
 
   const { status, socket } = useSocket((route) => new WebSocket(`/ws/${route.params.id}`));
 
-  watch(status, (websocket) => {
-    if(!status.value.done) return;
+  watch(status, ({ done }) => {
+    if(!done) return;
 
     socket.value.addEventListener('message', (event) => {
       if(ignore.value) return;
@@ -52,6 +52,10 @@
     ignore.value = false;
     history.push({ text, type: true });
 
-    socket.value.send(text);
+    if(WebSocket.OPEN == socket.value.readyState){
+      socket.value.send(text)
+    } else{
+      status.value = { done: true, error: new Error() }
+    }
   }
 </script>
