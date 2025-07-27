@@ -2,13 +2,12 @@
   <div class="card">
     <h1 class="title">{{ title }}</h1>
     <div class="main">
-      <span class="icon-big">{{ emoji }}</span>
+      <span class="emoji-big">{{ emoji }}</span>
       <div class="description">{{ puzzle }}</div>
     </div>
-    <div class="footer">
-      <button class="btn-dashed">reveal solution</button>
-      <button class="btn-dashed">play with ai</button>
-    </div>
+    <slot>
+      <div />
+    </slot>
   </div>
 </template>
 <script setup>
@@ -30,7 +29,7 @@
     flex-direction: column;
     gap: 10px;
   }
-  .icon-big{
+  .emoji-big{
     align-self: center;
   }
 
@@ -40,10 +39,5 @@
   .title{
     text-align: center;
     justify-content: flex-start;
-  }
-  .footer{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
   }
 </style>

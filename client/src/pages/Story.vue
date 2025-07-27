@@ -5,7 +5,14 @@
         :puzzle="data.puzzle"
         :emoji="data.emoji"
         :title="data.title"
-      />
+      >
+        <div class="footer">
+          <button class="btn-dashed">revel solution</button>
+          <router-link :to="{ name: 'chat', params: { id: route.params.id } }" class="btn-dashed">
+            play with AI
+          </router-link>
+        </div>
+      </Card>
     </div>
   </Curtain>
 </template>
@@ -22,6 +29,11 @@
     padding: 30px 0;
 
     box-sizing: border-box;
+  }
+  .footer{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 </style>
 <script setup>

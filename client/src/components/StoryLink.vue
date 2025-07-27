@@ -2,7 +2,7 @@
   <router-link :to="{ name: 'story', params: { id: id } }">
     <div class="story">
       <div class="icon-box">
-        <span class="icon-small">{{ emoji }}</span>
+        <span class="emoji-small">{{ emoji }}</span>
       </div>
       <h3 class="title">{{ title }}</h3>
     </div>
