@@ -1,52 +1,39 @@
 <template>
-  <div class="wrapper">
-    <div v-if="error">something went wrong</div>
-    <template v-else>
-      <h1>{{ content?.title }}</h1>
-      <span class="icon-big">{{ content?.emoji }}</span>
-      <div class="description">{{ content?.puzzle }}</div>
-      <div class="bottom">
-        <button class="btn-dashed">reveal solution</button>
-        <button class="btn-dashed">play with AI</button>
-      </div>
-    </template>
+  <div v-if="error">something went wrong</div>
+  <div v-else class="wrapper">
+    <Card 
+      :puzzle="content?.puzzle"
+      :emoji="content?.emoji"
+      :title="content?.title"
+    />
   </div>
 </template>
 <style scoped>
   .wrapper{
-    width: 75%;
     max-width: 540px;
+    width: 75%;
+    height: 100vh;
     margin: auto;
 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    gap: 30px;
-  }
-  .description{
-    text-align: center;
-  }
-  .bottom{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    width: 100%;
+    align-content: stretch;
+    justify-content: stretch;
+    padding: 30px 0;
+
+    box-sizing: border-box;
   }
 </style>
 <script>
+  import Card from '../components/Card.vue';
+
   export default {
+    components: { Card },
     data(){
       return {
         content: null, error: false
       }
     },
-    mounted(){
-      console.log('hello world');
-    },
-    async beforeRouteEnter(to, _, next) {
-      console.log('before')
+    async beforeRouteEnter(to, _, next){
       try{
         const story = await (await fetch(`/api/story/${to.params.id}`)).json();
         next(vm => vm.content = story);
