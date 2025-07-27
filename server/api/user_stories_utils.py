@@ -79,6 +79,25 @@ class UserStories:
         print(f"Story: {story}")
         print(f"Pending stories remaining: {len(pending)}")
 
+    def delete_pending_story(self, index):
+        with open(self.pending_stories_file, "r+", encoding="utf-8") as pf:
+            try:
+                pending = json.load(pf)
+            except json.JSONDecodeError:
+                raise ValueError("Pending stories file is corrupted or empty.")
+
+            if index < 0 or index >= len(pending):
+                raise IndexError("Invalid pending story index")
+
+            removed_story = pending.pop(index)
+
+            pf.seek(0)
+            json.dump(pending, pf, indent=2, ensure_ascii=False)
+            pf.truncate()
+
+        print(f"Deleted pending story at index {index}: {removed_story['title']}")
+        print(f"Pending stories remaining: {len(pending)}")
+
     def list_pending(self):
         with open(self.pending_stories_file, "r", encoding="utf-8") as f:
             pending = json.load(f)
