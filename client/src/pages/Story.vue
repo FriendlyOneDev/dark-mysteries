@@ -1,12 +1,13 @@
 <template>
-  <div v-if="error">something went wrong</div>
-  <div v-else class="wrapper">
-    <Card 
-      :puzzle="content?.puzzle"
-      :emoji="content?.emoji"
-      :title="content?.title"
-    />
-  </div>
+  <Curtain :status="status">
+    <div class="wrapper">
+      <Card 
+        :puzzle="data.puzzle"
+        :emoji="data.emoji"
+        :title="data.title"
+      />
+    </div>
+  </Curtain>
 </template>
 <style scoped>
   .wrapper{
@@ -23,31 +24,16 @@
     box-sizing: border-box;
   }
 </style>
-<script>
-  import Card from '../components/Card.vue';
+<script setup>
+  import { useRoute } from 'vue-router';
 
-  export default {
-    components: { Card },
-    data(){
-      return {
-        content: null, error: false
-      }
-    },
-    async beforeRouteEnter(to, _, next){
-      try{
-        const story = await (await fetch(`/api/story/${to.params.id}`)).json();
-        next(vm => vm.content = story);
-      } catch{
-        next(vm => vm.error = true);
-      }
-    },
-    async beforeRouteUpdate(to, _){
-      try{
-        const story = await (await fetch(`/api/story/${to.params.id}`)).json();
-        this.content = story;
-      } catch{
-        this.error = false;
-      }
-    },
-  }
+  import Card from '../components/Card.vue';
+  import Curtain from '../components/Curtain.vue';
+  import useLoader from '../loader.js';
+
+  const route = useRoute();
+
+  const { status, data } = useLoader(() => route.params.id, async (id) => {
+    return (await fetch(`/api/story/${id}`)).json();
+  });
 </script>
