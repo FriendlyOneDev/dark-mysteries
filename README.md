@@ -50,6 +50,7 @@ Linux:  ```.\run.sh```
 ### 4. Start the server.
 
 ```cd ..```
+
 ```.\server\api\api.py```
 
 ### 5. Open localhost website
