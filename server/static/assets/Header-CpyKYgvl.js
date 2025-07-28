@@ -1,0 +1,1 @@
+import{_ as a,d as t,o,a as e}from"./index-Cad0GPWs.js";const r={},c={class:"header"};function l(n,s){return o(),t("header",c,s[0]||(s[0]=[e("h1",{class:"title"},"DarkMysteries",-1),e("ul",{class:"links"},[e("li",null,"How to Play")],-1)]))}const _=a(r,[["render",l],["__scopeId","data-v-d9705d99"]]);export{_ as H};

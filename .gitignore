@@ -7,4 +7,4 @@ __pycache__
 users.json
 pending_stories.json
 
-server/static
+client

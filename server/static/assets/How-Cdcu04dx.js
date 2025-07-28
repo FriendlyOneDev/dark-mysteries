@@ -1,0 +1,1 @@
+import{_ as e,d as t,o}from"./index-AGNLKjYL.js";const r={},a={class:"center-view"};function s(n,c){return o(),t("div",a," Dark Mysteries can be played in group with narrator or solo with AI (acting as narrator). Read the mystery puzzle out load and then allow narrator read the solution. As yes/no question to solve the mystery. ")}const l=e(r,[["render",s]]);export{l as default};
