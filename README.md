@@ -56,4 +56,5 @@ Linux:  ```.\run.sh```
 ### 5. Open localhost website
 Local:   http://localhost:5173/
 
-### Expected results: [.\images\main_site.jpg]
+### Expected results:
+[./images/main_site.jpg]
