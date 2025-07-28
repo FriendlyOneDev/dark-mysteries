@@ -1,6 +1,7 @@
 node_modules
 
 venv
+.env
 server/api/__pycache__
 __pycache__/
 .pytest_cache/

@@ -8,7 +8,8 @@ const app = createApp(App);
 const router = createRouter({
   routes: [
     { path: '/', component: () => import('./pages/Home.vue') },
-    { name: 'story', path: '/story/:id', component: () => import('./pages/Story.vue') }
+    { name: 'story', path: '/story/:id', component: () => import('./pages/Story.vue') },
+    { name: 'chat', path: '/chat/:id', component: () => import('./pages/Chat.vue') }
   ],
   history: createWebHistory()
 });
