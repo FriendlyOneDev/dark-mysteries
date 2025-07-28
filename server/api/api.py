@@ -2,9 +2,11 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.requests import Request
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from starlette.exceptions import HTTPException as StarletteHTTPException
 import os
 import uvicorn
 import json
@@ -176,9 +178,17 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
 
 
 # Match other
-@app.get("/{full_path:path}")
-async def catch_all(full_path: str):
-    return FileResponse("static/index.html")
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
+    if (
+        exc.status_code == 404
+        and not request.url.path.startswith("/api")
+        and not request.url.path.startswith("/ws")
+    ):
+        return FileResponse(
+            os.path.join(os.path.dirname(__file__), "../static/index.html")
+        )
+    return await app.default_exception_handler(request, exc)
 
 
 if __name__ == "__main__":
