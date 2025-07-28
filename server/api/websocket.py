@@ -98,7 +98,7 @@ Current game session begins NOW.
                     temperature=0.1,
                 )
             except Exception as e:
-                print(f"Session {self.session_id} inner AI error: {str(e)}")
+                print(f"Session {self.session_id} inner AI error: {str(e)}", flush=True)
 
             response_text = response.choices[0].message.content
             self.messages.append({"role": "assistant", "content": response_text})
@@ -115,7 +115,7 @@ Current game session begins NOW.
                 self.active = False
 
         except Exception as e:
-            print(f"Session {self.session_id} outer AI error: {str(e)}")
+            print(f"Session {self.session_id} outer AI error: {str(e)}", flush=True)
             await self.send_message(json.dumps({"answer": "error", "solved": False}))
             self.active = False
 
