@@ -90,7 +90,7 @@ def startup_event():
     try:
         print("Loading stories...")
         all_stories.load_stories("server/stories/stories.json")
-        if not all_stories.stories:
+        if not all_stories.stories:git p
             print("Warning: No stories loaded!")
     except Exception as e:
         print(f"Failed to load stories: {e}")
@@ -173,4 +173,4 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 3000))
     os.environ["APP_PORT"] = str(port)
-    uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False, log_level="debug")
