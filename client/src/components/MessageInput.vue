@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="send" class="message-send">
-    <input v-model="message" class="message-input" placeholder="type" />
+    <input v-model="message" :disabled="disable" class="message-input" placeholder="type" />
     <button type="submit" class="btn-icon">
       <SendIcon class="icon"/>
     </button>
@@ -24,6 +24,7 @@
 
   const message = ref('');
   const emit = defineEmits(['message']);
+  const { disable } = defineProps(['disable']);
 
   function send(){
     if(!message.value) return;

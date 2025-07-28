@@ -8,7 +8,7 @@
       />
       <div class="chat">
         <MessageHistory :messages="history"/>
-        <MessageInput @message="message"/>
+        <MessageInput :disable="!turn" @message="message"/>
       </div>
     </div>
   </Curtain>
@@ -52,9 +52,10 @@
   }
 
   const ignore = ref(true);
+  const turn = ref(true);
   const history = reactive([]);
 
-  const { 
+  const {
     status: socketStatus, socket
   } = useSocket((route) => new WebSocket(`/ws/${route.params.id}`));
   const { 
@@ -77,11 +78,13 @@
         text: solved ? 'Congrats! You have solved it' : ANSWERS[answer],
         type: false
       });
+      turn.value = true;
     })
   }, { immediate: true })
 
   function message(text){
     ignore.value = false;
+    turn.value = false;
     history.push({ text, type: true });
 
     if(WebSocket.OPEN == socket.value.readyState){
