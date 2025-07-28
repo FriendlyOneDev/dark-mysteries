@@ -26,6 +26,10 @@
   .message.answer{
     text-align: left;
   }
+  .history{
+    overflow-x: scroll;
+    padding-right: 20px;
+  }
 </style>
 <script setup>
   const { messages } = defineProps(['messages']);

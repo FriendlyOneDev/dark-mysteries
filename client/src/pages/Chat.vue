@@ -1,22 +1,33 @@
 <template>
   <Curtain v-bind="status">
     <div class="wrapper">
-      <MessageHistory :messages="history"/>
-      <MessageInput @message="message"/>
+      <Card class="preview" 
+        :puzzle="data.puzzle"
+        :emoji="data.emoji"
+        :title="data.title"
+      />
+      <div class="chat">
+        <MessageHistory :messages="history"/>
+        <MessageInput @message="message"/>
+      </div>
     </div>
   </Curtain>
 </template>
 <style scoped>
   .wrapper{
-    max-width: 720px;
-    margin: auto;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
 
     display: flex;
-    flex-direction: column;
-    height: 100vh;
+    gap: 10px;
+  }
+  .chat { flex: 3; }
+  .preview { flex: 1; }
 
-    padding: 20px 0;
-    box-sizing: border-box;
+  .chat{
+    display: flex;
+    flex-direction: column;
   }
   .history{
     flex: 1;
@@ -26,10 +37,11 @@
   }
 </style>
 <script setup>
-  import { reactive, ref, watch } from 'vue';
-  import { useSocket } from '../loader.js';
+  import { computed, reactive, ref, watch } from 'vue';
+  import { useSocket, useFetcher } from '../loader.js';
   
   import Curtain from '../components/Curtain.vue';
+  import Card from '../components/Card.vue';
   import MessageHistory from '../components/MessageHistory.vue';
   import MessageInput from '../components/MessageInput.vue';
 
@@ -42,12 +54,22 @@
   const ignore = ref(true);
   const history = reactive([]);
 
-  const { status, socket } = useSocket((route) => new WebSocket(`/ws/${route.params.id}`));
+  const { 
+    status: socketStatus, socket
+  } = useSocket((route) => new WebSocket(`/ws/${route.params.id}`));
+  const { 
+    status: fetchStatus, data
+  } = useFetcher((route) => fetch(`/api/story/${route.params.id}`));
 
-  watch(status, ({ done }) => {
-    if(!done) return;
+  const status = computed(() => ({
+    done: socketStatus.value.done && fetchStatus.value.done,
+    error: socketStatus.value.error ?? fetchStatus.value.error,
+  }));
 
-    socket.value.addEventListener('message', (event) => {
+  watch(socket, (websocket) => {
+    if(!websocket) return;
+
+    websocket.addEventListener('message', (event) => {
       if(ignore.value) return;
 
       let { answer, solved } = JSON.parse(event.data);
@@ -56,7 +78,7 @@
         type: false
       });
     })
-  })
+  }, { immediate: true })
 
   function message(text){
     ignore.value = false;
