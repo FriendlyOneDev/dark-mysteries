@@ -57,4 +57,4 @@ Linux:  ```.\run.sh```
 Local:   http://localhost:5173/
 
 ### Expected results:
-[./images/main_site.jpg]
+[./images/main_site.jpg](./images/main_site.jpg)
