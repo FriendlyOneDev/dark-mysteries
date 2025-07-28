@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"), timeout=30)
 
 
 class GameSession:
@@ -91,11 +91,18 @@ Current game session begins NOW.
         self.messages.append({"role": "user", "content": user_input})
 
         try:
-            response = client.chat.completions.create(
-                model="gpt-4.1-mini",
-                messages=self.messages,
-                temperature=0.1,
-            )
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4.1-mini",
+                    messages=self.messages,
+                    temperature=0.1,
+                )
+            except Exception as e:
+                print(
+                    f"Session {self.session_id} inner AI error:  {type(e).__name__}:{str(e)}",
+                    flush=True,
+                )
+
             response_text = response.choices[0].message.content
             self.messages.append({"role": "assistant", "content": response_text})
 
@@ -111,7 +118,7 @@ Current game session begins NOW.
                 self.active = False
 
         except Exception as e:
-            print(f"Session {self.session_id} AI error: {str(e)}")
+            print(f"Session {self.session_id} outer AI error: {str(e)}", flush=True)
             await self.send_message(json.dumps({"answer": "error", "solved": False}))
             self.active = False
 

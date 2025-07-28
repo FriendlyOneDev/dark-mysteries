@@ -2,14 +2,23 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.requests import Request
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel
+from dotenv import load_dotenv
+from starlette.exceptions import HTTPException as StarletteHTTPException
 import os
 import uvicorn
 import json
 from websocket import GameSession
 from auth import AuthService
 from user_stories_utils import UserStories
+from pathlib import Path
+
+
+load_dotenv()
+DEV = os.environ.get("DEV")
+
 
 app = FastAPI()
 
@@ -17,13 +26,15 @@ last_modified_time = None
 
 stories_path = "server/stories/stories.json"
 
-static_path = os.path.join(os.path.dirname(__file__), "../static")
-app.mount("/static", StaticFiles(directory=static_path), name="static")
-app.mount(
-    "/assets",
-    StaticFiles(directory=os.path.join(os.path.dirname(__file__), "../static/assets")),
-    name="assets",
-)
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = BASE_DIR / "static"
+ASSETS_DIR = STATIC_DIR / "assets"
+INDEX_FILE = STATIC_DIR / "index.html"
+
+if not DEV:
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+    app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
 
 app.add_middleware(
@@ -81,7 +92,9 @@ sessions: Dict[str, GameSession] = {}
 
 @app.get("/")
 async def root():
-    return FileResponse(os.path.join(os.path.dirname(__file__), "../static/index.html"))
+    if INDEX_FILE.exists():
+        return FileResponse(INDEX_FILE)
+    raise HTTPException(status_code=500, detail="index.html not found")
 
 
 @app.on_event("startup")
@@ -163,10 +176,30 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
     finally:
         if session.session_id in sessions:
             del sessions[session.session_id]
-        await websocket.close()
+        try:
+            await websocket.close()
+        except RuntimeError:
+            pass
+
+
+# Match other
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
+    if (
+        exc.status_code == 404
+        and not request.url.path.startswith("/api")
+        and not request.url.path.startswith("/ws")
+    ):
+        if INDEX_FILE.exists():
+            return FileResponse(INDEX_FILE)
+        return JSONResponse(
+            status_code=500, content={"detail": "index.html not found."}
+        )
+
+    raise exc
 
 
 if __name__ == "__main__":
-    port = 3000
+    port = int(os.environ.get("PORT", 3000))
     os.environ["APP_PORT"] = str(port)
-    uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("api:app", host="0.0.0.0", port=port, reload=False, log_level="debug")

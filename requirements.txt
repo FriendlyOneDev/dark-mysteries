@@ -7,3 +7,4 @@ pytest
 passlib
 python-multipart
 pytest-asyncio
+starlette
