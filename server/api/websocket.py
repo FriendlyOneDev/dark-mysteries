@@ -98,7 +98,10 @@ Current game session begins NOW.
                     temperature=0.1,
                 )
             except Exception as e:
-                print(f"Session {self.session_id} inner AI error: {str(e)}", flush=True)
+                print(
+                    f"Session {self.session_id} inner AI error:  {type(e).__name__}:{str(e)}",
+                    flush=True,
+                )
 
             response_text = response.choices[0].message.content
             self.messages.append({"role": "assistant", "content": response_text})
