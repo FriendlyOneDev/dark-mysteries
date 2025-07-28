@@ -61,7 +61,7 @@
     if(import.meta.env.DEV){
       return new WebSocket(`/ws/${route.params.id}`);
     } else{
-      return new WebSocket(`wss://dark-mysteries-production.up.railway.app/ws/${route.params.id}`);
+      return new WebSocket(`wss://dark-mysteries.onrender.com/ws/${route.params.id}`);
     }
   });
   const { 
