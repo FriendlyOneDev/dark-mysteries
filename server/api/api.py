@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel
-import dotenv
+from dotenv import load_dotenv
 import os
 import uvicorn
 import json
@@ -14,7 +14,7 @@ from user_stories_utils import UserStories
 from pathlib import Path
 
 load_dotenv()
-PRODUCTION = os.environ.get("PRODUCTION")
+DEV = os.environ.get("DEV")
 
 
 app = FastAPI()
@@ -23,7 +23,7 @@ last_modified_time = None
 
 stories_path = "server/stories/stories.json"
 
-if not PRODUCTION:
+if not DEV:
     BASE_DIR = Path(__file__).parent.parent
     static_path = BASE_DIR / "static"
     assets_path = BASE_DIR / "static" / "assets"
