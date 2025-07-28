@@ -152,9 +152,6 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
     sessions[session.session_id] = session
 
     try:
-        await websocket.send_text(f"Situation: {session.situation}")
-        await websocket.send_text("Ask yes/no questions to solve the mystery.")
-
         while session.active:
             data = await websocket.receive_text()
             await session.handle_message(data)
