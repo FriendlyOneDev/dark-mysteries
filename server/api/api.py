@@ -164,7 +164,10 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
     finally:
         if session.session_id in sessions:
             del sessions[session.session_id]
-        await websocket.close()
+        try:
+            await websocket.close()
+        except RuntimeError:
+            pass
 
 
 if __name__ == "__main__":
