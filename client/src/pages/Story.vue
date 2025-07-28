@@ -1,16 +1,30 @@
 <template>
   <Curtain v-bind="status">
     <div class="wrapper">
-      <Card 
-        :puzzle="data.puzzle" :emoji="data.emoji" :title="data.title"
-      >
-        <div class="footer">
-          <button class="btn-dashed">revel solution</button>
-          <router-link :to="{ name: 'chat', params: { id: $route.params.id } }" class="btn-dashed">
-            play with AI
-          </router-link>
-        </div>
-      </Card>
+      <Flip :flipped="flipped">
+        <template #front>
+          <Card
+            :puzzle="data.puzzle" :emoji="data.emoji" :title="data.title"
+          >
+            <div class="footer">
+              <button @click="flipped = !flipped" class="btn-dashed">reveal solution</button>
+              <router-link :to="{ name: 'chat', params: { id: $route.params.id } }" class="btn-dashed">
+                play with AI
+              </router-link>
+            </div>
+          </Card>
+        </template>
+        <template #back>
+          <Card
+            :puzzle="data.solution" :emoji="data.emoji" :title="data.title"
+          >
+            <div class="footer">
+              <button @click="flipped = !flipped" class="btn-dashed">back to puzzle</button>
+            </div>
+          </Card>
+        </template>
+      </Flip>
+      
     </div>
   </Curtain>
 </template>
@@ -29,9 +43,11 @@
     box-sizing: border-box;
   }
   .footer{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
     gap: 10px;
+  }
+  .footer > *{
+    flex: auto;
   }
 </style>
 <script setup>
@@ -39,7 +55,10 @@
 
   import Card from '../components/Card.vue';
   import Curtain from '../components/Curtain.vue';
-  import { watch } from 'vue';
+  import Flip from '../components/Flip.vue';
 
+  import { ref } from 'vue';
+
+  const flipped = ref(false);
   const { status, data } = useFetcher((route) => fetch(`/api/story/${route.params.id}`));
 </script>
