@@ -23,6 +23,7 @@
 
     transition: background-color 100ms;
     border: var(--primary-color) dashed 5px;
+    border-radius: 3px;
   }
   .story:hover{
     background-color: var(--primary-color);
