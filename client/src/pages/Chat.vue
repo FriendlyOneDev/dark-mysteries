@@ -33,6 +33,12 @@
   import MessageHistory from '../components/MessageHistory.vue';
   import MessageInput from '../components/MessageInput.vue';
 
+  const ANSWERS = {
+    'bad': "I don't understand you. Try rephrasing your question",
+    'yes': 'Yes',
+    'no': 'No'
+  }
+
   const ignore = ref(true);
   const history = reactive([]);
 
@@ -44,7 +50,11 @@
     socket.value.addEventListener('message', (event) => {
       if(ignore.value) return;
 
-      history.push({ text: JSON.parse(event.data).answer, type: false });
+      let { answer, solved } = JSON.parse(event.data);
+      history.push({
+        text: solved ? 'Congrats! You have solved it' : ANSWERS[answer],
+        type: false
+      });
     })
   })
 
