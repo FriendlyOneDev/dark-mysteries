@@ -1,66 +1,64 @@
 <template>
-  <div class="wrapper">
-    <div v-if="error">something went wrong</div>
-    <template v-else>
-      <h1>{{ content?.title }}</h1>
-      <span class="icon-big">{{ content?.emoji }}</span>
-      <div class="description">{{ content?.puzzle }}</div>
-      <div class="bottom">
-        <button class="btn-dashed">reveal solution</button>
-        <button class="btn-dashed">play with AI</button>
-      </div>
-    </template>
-  </div>
+  <Curtain v-bind="status">
+    <div class="wrapper">
+      <Flip :flipped="flipped">
+        <template #front>
+          <Card
+            :puzzle="data.puzzle" :emoji="data.emoji" :title="data.title"
+          >
+            <div class="footer">
+              <button @click="flipped = !flipped" class="btn-dashed">reveal solution</button>
+              <router-link :to="{ name: 'chat', params: { id: $route.params.id } }" class="btn-dashed">
+                play with AI
+              </router-link>
+            </div>
+          </Card>
+        </template>
+        <template #back>
+          <Card
+            :puzzle="data.solution" :emoji="data.emoji" :title="data.title"
+          >
+            <div class="footer">
+              <button @click="flipped = !flipped" class="btn-dashed">back to puzzle</button>
+            </div>
+          </Card>
+        </template>
+      </Flip>
+      
+    </div>
+  </Curtain>
 </template>
 <style scoped>
   .wrapper{
-    width: 75%;
     max-width: 540px;
+    width: 75%;
+    height: 100vh;
     margin: auto;
 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    gap: 30px;
+    align-content: stretch;
+    justify-content: stretch;
+    padding: 30px 0;
+
+    box-sizing: border-box;
   }
-  .description{
-    text-align: center;
-  }
-  .bottom{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+  .footer{
+    display: flex;
     gap: 10px;
-    width: 100%;
+  }
+  .footer > *{
+    flex: auto;
   }
 </style>
-<script>
-  export default {
-    data(){
-      return {
-        content: null, error: false
-      }
-    },
-    mounted(){
-      console.log('hello world');
-    },
-    async beforeRouteEnter(to, _, next) {
-      console.log('before')
-      try{
-        const story = await (await fetch(`/api/story/${to.params.id}`)).json();
-        next(vm => vm.content = story);
-      } catch{
-        next(vm => vm.error = true);
-      }
-    },
-    async beforeRouteUpdate(to, _){
-      try{
-        const story = await (await fetch(`/api/story/${to.params.id}`)).json();
-        this.content = story;
-      } catch{
-        this.error = false;
-      }
-    },
-  }
+<script setup>
+  import { useFetcher } from '../loader.js';
+
+  import Card from '../components/Card.vue';
+  import Curtain from '../components/Curtain.vue';
+  import Flip from '../components/Flip.vue';
+
+  import { ref } from 'vue';
+
+  const flipped = ref(false);
+  const { status, data } = useFetcher((route) => fetch(`/api/story/${route.params.id}`));
 </script>

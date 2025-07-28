@@ -16,7 +16,11 @@ h1, h2, h3, h4, h5, h6{
   padding: 0;
 }
 
-a, ul, li{
+button{
+  cursor: pointer;
+}
+
+input, a, ul, li{
   all: unset;
 }
 
@@ -27,21 +31,46 @@ a, ul, li{
   --text-color: #FFFFFF;
 }
 
-.icon-small, .icon-big{
+.emoji-small, .emoji-big{
   font-family: 'Noto Emoji';
   user-select: none;
   color: red;
 }
 
-.icon-small{
+.emoji-small{
   font-size: 64px;
 }
-.icon-big{
+.emoji-big{
   font-size: 128px;
+}
+
+.icon{
+  width: 32px;
+  height: 32px;
+}
+
+.btn-icon{
+  background: none;
+  border: none;
+  outline: none;
+  fill: var(--text-color);
+
+  display: inline-flex;
+  justify-content: center;
+  align-content: center;
+
+  border-radius: 3px;
+  padding: 10px;
+  transition-property: background;
+  transition-duration: 250ms;
+}
+.btn-icon:hover{
+  background-color: var(--primary-color);
 }
 
 .btn-dashed{
   background: none;
+  text-align: center;
   color: var(--text-color);
   font: inherit;
   font-size: 24px;
