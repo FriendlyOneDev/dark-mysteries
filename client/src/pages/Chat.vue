@@ -57,7 +57,13 @@
 
   const {
     status: socketStatus, socket
-  } = useSocket((route) => new WebSocket(`/ws/${route.params.id}`));
+  } = useSocket((route) => {
+    if(import.meta.env.DEV){
+      return new WebSocket(`/ws/${route.params.id}`);
+    } else{
+      return new WebSocket(`wss://dark-mysteries-production.up.railway.app/ws/${route.params.id}`);
+    }
+  });
   const { 
     status: fetchStatus, data
   } = useFetcher((route) => fetch(`/api/story/${route.params.id}`));
