@@ -175,6 +175,12 @@ async def websocket_endpoint(websocket: WebSocket, story_id: int):
             pass
 
 
+# Match other
+@app.get("/{full_path:path}")
+async def catch_all(full_path: str):
+    return FileResponse("static/index.html")
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 3000))
     os.environ["APP_PORT"] = str(port)
