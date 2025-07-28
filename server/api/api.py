@@ -90,7 +90,7 @@ def startup_event():
     try:
         print("Loading stories...")
         all_stories.load_stories("server/stories/stories.json")
-        if not all_stories.stories:git p
+        if not all_stories.stories:
             print("Warning: No stories loaded!")
     except Exception as e:
         print(f"Failed to load stories: {e}")
