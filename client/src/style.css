@@ -31,7 +31,7 @@ input, a, ul, li{
   --text-color: #FFFFFF;
 }
 
-.emoji-small, .emoji-big{
+.emoji, .emoji-small, .emoji-big{
   font-family: 'Noto Emoji';
   user-select: none;
   color: red;
@@ -49,10 +49,12 @@ input, a, ul, li{
   height: 32px;
 }
 
-.btn-icon{
+button.btn-icon{
   background: none;
   border: none;
   outline: none;
+}
+.btn-icon{
   fill: var(--text-color);
 
   display: inline-flex;
@@ -68,11 +70,19 @@ input, a, ul, li{
   background-color: var(--primary-color);
 }
 
-.btn-dashed{
+a.btn-dashed{
+  display: inline-flex;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+button.btn-dashed{
   background: none;
-  text-align: center;
+  font-family: inherit;
+}
+
+.btn-dashed{
   color: var(--text-color);
-  font: inherit;
   font-size: 24px;
   padding: 5px;
   border: 3px var(--text-color) dashed;
@@ -90,10 +100,10 @@ input, a, ul, li{
 .center-view{
   max-width: var(--limit, 720px);
   margin: auto;
-  padding: 10px;
 }
-@media (max-width: 540px){
-  .center-view{
-    margin: 10px;
-  }
+
+.full-height{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }

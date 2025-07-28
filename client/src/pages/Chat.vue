@@ -1,11 +1,10 @@
 <template>
   <Curtain v-bind="status">
     <div class="wrapper">
-      <Card class="preview" 
-        :puzzle="data.puzzle"
-        :emoji="data.emoji"
-        :title="data.title"
-      />
+      <div class="preview">
+        <span class="emoji">{{ data.emoji }}</span>
+        <div class="description">{{ data.puzzle }}</div>
+      </div>
       <div class="chat">
         <MessageHistory :messages="history"/>
         <MessageInput :disable="!turn" @message="message"/>
@@ -25,6 +24,21 @@
   .chat { flex: 3; }
   .preview { flex: 1; }
 
+  .preview{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 10px;
+  }
+  .emoji{
+    font-size: 128px;
+    align-self: center;
+  }
+  .description{
+    text-align: center;
+  }
+
   .chat{
     display: flex;
     flex-direction: column;
@@ -35,13 +49,25 @@
   .message-box{
     flex-shrink: 0;
   }
+
+  @media (max-width: 540px){
+    .wrapper{
+      flex-direction: column;
+    }
+    .preview{
+      flex-direction: row;
+      flex: initial;
+    }
+    .emoji{
+      font-size: 64px;
+    }
+  }
 </style>
 <script setup>
   import { computed, reactive, ref, watch } from 'vue';
   import { useSocket, useFetcher } from '../loader.js';
   
   import Curtain from '../components/Curtain.vue';
-  import Card from '../components/Card.vue';
   import MessageHistory from '../components/MessageHistory.vue';
   import MessageInput from '../components/MessageInput.vue';
 
@@ -61,10 +87,10 @@
     if(import.meta.env.DEV){
       return new WebSocket(`/ws/${route.params.id}`);
     } else{
-      return new WebSocket(`wss://dark-mysteries-production.up.railway.app/ws/${route.params.id}`);
+      return new WebSocket(`wss://dark-mysteries.onrender.com/ws/${route.params.id}`);
     }
   });
-  const { 
+  const {
     status: fetchStatus, data
   } = useFetcher((route) => fetch(`/api/story/${route.params.id}`));
 

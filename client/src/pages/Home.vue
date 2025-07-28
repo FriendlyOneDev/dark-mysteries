@@ -1,35 +1,19 @@
 <template>
-  <Header />
-  <div class="center-view wrapper">
-    <div v-if="error">Something went wrong</div>
-    <template v-else>
-      <Story v-for="story in stories" v-bind="story"/>
-    </template>
-  </div>
+  <Curtain v-bind="status">
+    <Header />
+    <div class="center-view wrapper">
+      <Story v-for="story in data" v-bind="story"/>
+    </div>
+  </Curtain>
 </template>
-<script>
+<script setup>
+  import Curtain from '../components/Curtain.vue';
   import Header from '../components/Header.vue';
   import Story from '../components/StoryLink.vue';
 
-  export default {
-    components: { Header, Story },
-
-    data(){
-      return {
-        stories: null, error: false
-      }
-    },
-    async beforeRouteEnter(to, from, next) {
-      try{
-        const res = await fetch('/api/all_stories');
-        const stories = await res.json();
-
-        next(vm => vm.stories = stories)
-      } catch{
-        next(vm => vm.error = true)
-      }
-    }
-  }
+  import { useFetcher } from '../loader';
+  
+  const { status, data } = useFetcher(() => fetch('/api/all_stories'));
 </script>
 <style scoped>
   .header{
@@ -40,6 +24,7 @@
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
     align-content: center;
+    padding: 10px;
 
     --limit: 840px;
   }
