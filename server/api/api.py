@@ -15,6 +15,7 @@ from auth import AuthService
 from user_stories_utils import UserStories
 from pathlib import Path
 
+
 load_dotenv()
 DEV = os.environ.get("DEV")
 
@@ -25,13 +26,15 @@ last_modified_time = None
 
 stories_path = "server/stories/stories.json"
 
-if not DEV:
-    BASE_DIR = Path(__file__).parent.parent
-    static_path = BASE_DIR / "static"
-    assets_path = BASE_DIR / "static" / "assets"
 
-    app.mount("/static", StaticFiles(directory=static_path), name="static")
-    app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = BASE_DIR / "static"
+ASSETS_DIR = STATIC_DIR / "assets"
+INDEX_FILE = STATIC_DIR / "index.html"
+
+if not DEV:
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+    app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
 
 app.add_middleware(
@@ -89,7 +92,9 @@ sessions: Dict[str, GameSession] = {}
 
 @app.get("/")
 async def root():
-    return FileResponse(os.path.join(os.path.dirname(__file__), "../static/index.html"))
+    if INDEX_FILE.exists():
+        return FileResponse(INDEX_FILE)
+    raise HTTPException(status_code=500, detail="index.html not found")
 
 
 @app.on_event("startup")
@@ -185,10 +190,13 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
         and not request.url.path.startswith("/api")
         and not request.url.path.startswith("/ws")
     ):
-        return FileResponse(
-            os.path.join(os.path.dirname(__file__), "../static/index.html")
+        if INDEX_FILE.exists():
+            return FileResponse(INDEX_FILE)
+        return JSONResponse(
+            status_code=500, content={"detail": "index.html not found."}
         )
-    return await app.default_exception_handler(request, exc)
+
+    raise exc
 
 
 if __name__ == "__main__":
