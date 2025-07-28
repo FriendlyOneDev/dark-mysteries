@@ -9,7 +9,7 @@
   },
   {
     "id": 1,
-    "emoji": "❄️",
+    "emoji": "❄",
     "title": "A Cold Drink",
     "puzzle": "Two men walk into a restaurant. The waiter brings them both beverages. The beverages are the same. One man drinks his glass down right away, and nothing bad happens to him. The other man takes his time and drinks slowly. He dies. Why?",
     "solution": "There was poison in ice cubes. The first man drank it down before the ice had a chance to melt.",
@@ -25,7 +25,7 @@
   },
   {
     "id": 3,
-    "emoji": "🏙️",
+    "emoji": "🏙︎",
     "title": "The Rainy Day",
     "puzzle": "Mr. Smith lives on the 30th floor of his apartment building. Every day he takes the elevator down from his apartment to the lobby. After work, he takes the elevator from the lobby to the 15th floor and walks up the stairs the rest of the way. On rainy days he takes the elevator all the way from the lobby to the 30th floor. Why?",
     "solution": " Mr. Smith is a short. He can`t usually reach the button to the 30th floor. On rainy days he has his umbrella with him and pushes the button with it.",
@@ -41,7 +41,7 @@
   },
   {
     "id": 5,
-    "emoji": "🏔️",
+    "emoji": "🗻",
     "title": "27 Silent Souls",
     "puzzle": "There are 27 people in a cabin on a mountain. The windows and doors are all locked, but everyone inside is dead. What happened?",
     "solution": "The cabin is an airplane cabin that crashed on a mountain.",
@@ -49,7 +49,7 @@
   },
   {
     "id": 6,
-    "emoji": "🕊️",
+    "emoji": "🕊︎",
     "title": "The Deadly Sighting",
     "puzzle": "An avid birdwatcher sees an unexpected bird. Soon he`s dead. What happened?",
     "solution": "The birdwatcher was flying in a plane. The bird got stuck in the plane`s engine and made the plane crash.",
