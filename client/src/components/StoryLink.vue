@@ -16,8 +16,7 @@
     display: flex;
     flex-direction: column;
 
-    width: 200px;
-    height: 200px;
+    aspect-ratio: 1 / 1;
 
     box-sizing: border-box;
     padding: 20px;

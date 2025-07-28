@@ -86,3 +86,14 @@ input, a, ul, li{
   color: var(--background-color);
   border-color: transparent;
 }
+
+.center-view{
+  max-width: var(--limit, 720px);
+  margin: auto;
+  padding: 10px;
+}
+@media (max-width: 540px){
+  .center-view{
+    margin: 10px;
+  }
+}

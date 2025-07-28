@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <div class="wrapper">
+  <div class="center-view wrapper">
     <div v-if="error">Something went wrong</div>
     <template v-else>
       <Story v-for="story in stories" v-bind="story"/>
@@ -36,11 +36,11 @@
     margin-bottom: 50px;
   }
   .wrapper{
-    width: 75%;
-    margin: auto;
-
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
+    align-content: center;
+
+    --limit: 840px;
   }
 </style>
